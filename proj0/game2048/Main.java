@@ -31,7 +31,6 @@ public class Main {
         if (options.contains("--seed")) {
             gen.setSeed(options.getLong("--seed"));
         }
-
         Model model = new Model(BOARD_SIZE);
 
         GUI gui;

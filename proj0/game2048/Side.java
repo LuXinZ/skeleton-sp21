@@ -37,7 +37,6 @@ public enum Side {
         this.drow = drow;
         this.dcol = dcol;
     }
-
     /** Returns the side opposite of side S. */
     static Side opposite(Side s) {
         if (s == NORTH) {
