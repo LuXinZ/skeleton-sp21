@@ -102,7 +102,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
         return getRecursiveHelper(index - 1, currentNode.next);
     }
-    @Override
     public Iterator<T> iterator() {
         return new LinkedListDequeIterator();
     }
