@@ -3,56 +3,41 @@ package deque;
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T> {
-    public int size;
-    public Node sentinel;
-    public Node endSentinel;
-    public class Node {
-        public T item;
-        public Node next;
-        public Node prev;
-        public Node(T i, Node n){
-            item = i;
-            next = n ;
-        }
-    }
+    private final Node<T> head = new Node<>(null,null,null);
+    private int size;
     public LinkedListDeque(){
-        sentinel = new Node(null,null);
-        endSentinel = sentinel;
+        head.next = head;
+        head.prev = head;
         size = 0;
     }
-    public T getRecursive(int index) {
-        return null;
+    public LinkedListDeque(T item){
+        head.next = new Node<>(item,head,head);
+        head.prev = head.next;
+        size = 1;
+    }
+    private static class Node<N>{
+        private final N item;
+        private Node<N> prev;
+        private Node<N> next;
+        Node(N i , Node<N> p, Node<N> n){
+            item = i ;
+            prev = p;
+            next = n;
+        }
     }
     @Override
     public void addFirst(T item) {
-        Node first  = new Node(item,sentinel.next);
-        sentinel.next = first;
-        first.prev = sentinel;
-        if(first.next == null){
-            endSentinel = first;
-        }
-
+        head.next = new Node<>(item,head,head.next);
+        head.next.next.prev = head.next;
         size +=1;
     }
 
     @Override
     public void addLast(T item) {
-        Node p = endSentinel;
-        endSentinel.next  =new Node(item,null);
 
-        endSentinel = endSentinel.next;
-        endSentinel.prev = p;
-        size+=1;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
-    public void printDeque() {
-
+        head.prev = new Node<>(item,head.prev,head);
+        head.prev.prev.next = head.prev;
+        size +=1;
     }
 
     @Override
@@ -61,34 +46,81 @@ public class LinkedListDeque<T> implements Deque<T> {
     }
 
     @Override
+    public void printDeque() {
+
+    }
+
+    @Override
     public T removeFirst() {
-        if (size == 0) {
-           return null;
+        if (isEmpty()){
+            return  null;
         }
-        Node next = sentinel.next;
-        sentinel = next;
+        T item = head.next.item;
+        head.next = head.next.next;
+        head.next.prev = head;
         size -=1;
-        return next.item;
+        return item;
     }
 
     @Override
     public T removeLast() {
-        if (size == 0) {
-           return null;
+        if (isEmpty()){
+            return null;
         }
-        Node p = endSentinel;
-        endSentinel = endSentinel.prev;
+        T item = head.prev.item;
+        head.prev = head.prev.prev;
+        head.prev.next = head;
         size -=1;
-        return p.item;
+        return item;
     }
 
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index > size -1){
+            return null;
+        }
+        Node<T > currentNode = head.next;
+        for (int i = 0; i < size; i++) {
+           if (i ==index) {
+               return currentNode.item;
+           }
+           currentNode = currentNode.next;
+        }
+        throw  new AssertionError();
     }
 
+    public T getRecursive(int index) {
+        if (index < 0 || index > size - 1) {
+            return null;
+        }
+        return getRecursiveHelper(index, head.next);
+    }
+
+    private T getRecursiveHelper(int index, Node<T> currentNode) {
+        if (index == 0) {
+            return currentNode.item;
+        }
+        return getRecursiveHelper(index - 1, currentNode.next);
+    }
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new LinkedListDequeIterator();
+    }
+    private class LinkedListDequeIterator implements Iterator<T> {
+        private Node<T> p;
+
+        LinkedListDequeIterator() {
+            p = head.next;
+        }
+
+        public boolean hasNext() {
+            return p == head;
+        }
+
+        public T next() {
+            T item = p.item;
+            p = p.next;
+            return item;
+        }
     }
 }
