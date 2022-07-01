@@ -103,7 +103,6 @@ public class ArrayDeque<T> implements Deque<T> , Iterable<T> {
             index = 0;
 
         }
-        @Override
         public boolean hasNext() {
             return index < size;
         }

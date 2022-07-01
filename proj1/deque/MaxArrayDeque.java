@@ -2,8 +2,6 @@ package deque;
 
 
 import java.util.Comparator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 public class MaxArrayDeque<T> extends  ArrayDeque<T>{
     Comparator<T> com ;
@@ -26,7 +24,4 @@ public class MaxArrayDeque<T> extends  ArrayDeque<T>{
         }
         return get(maxIndex);
     }
-
-
-
 }
